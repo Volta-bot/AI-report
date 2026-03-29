@@ -1,0 +1,187 @@
+% =========================
+% DOCUMENT CLASS
+% =========================
+\documentclass[a4paper,12pt,openany]{report}
+
+% =========================
+% PACKAGES
+% =========================
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+% Show deeper section levels
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% =========================
+% BEGIN DOCUMENT
+% =========================
+\begin{document}
+
+% =========================
+% CUSTOM TITLE PAGE
+% =========================
+\begin{titlepage}
+
+\begin{center}
+
+{\large \textbf{HANOI UNIVERSITY OF SCIENCE AND TECHNOLOGY}}\\[2cm]
+
+{\Huge \textbf{GRADUATION THESIS}}\\[1.5cm]
+
+{\Large Edge-based Traffic Prediction via Federated Learning}\\[2cm]
+
+{\large \textbf{LUU QUOC KHANH}}\\
+{\large enter email here}\\[0.3cm]
+
+{\large \textbf{DOAN NGUYEN NGOC SON}}\\
+{\large enter email here}\\[0.5cm]
+
+{\large Program: Global ICT}\\[2cm]
+
+\begin{flushleft}
+\textbf{Supervisor:} Associate Professor PHAM VAN HAI
+\end{flushleft}
+
+\vspace{1cm}
+
+\begin{flushleft}
+\textbf{Department:} Computer Engineering
+\end{flushleft}
+
+\begin{flushleft}
+\textbf{School:} School of Information and Communications Technology
+\end{flushleft}
+
+\vfill
+
+{\large HANOI, 12/2025}
+
+\end{center}
+
+\end{titlepage}
+
+% =========================
+% TABLE OF CONTENTS
+% =========================
+\tableofcontents
+
+% =========================
+% CHAPTER 1
+% =========================
+\chapter{INTRODUCTION}
+
+\section{Problem Statement}
+
+\section{Background and Problems}
+\subsection{Privacy Risks of Centralized Traffic Systems}
+
+\section{Privacy vs. Accuracy: The Case for Federated Learning}
+\subsection{Quantifying the Accuracy Loss}
+\subsection{Concrete Privacy Benefits}
+\subsection{When Federated Learning Is the Right Choice}
+
+\section{Objectives}
+
+\section{Contributions}
+
+\section{Organization}
+
+% =========================
+% CHAPTER 2
+% =========================
+\chapter{REQUIREMENT SURVEY AND ANALYSIS}
+
+\section{Traffic Flow Prediction}
+\subsection{Traditional Approaches}
+\subsection{Deep Learning Approaches}
+
+\section{Federated Learning in Intelligent Transportation Systems}
+
+\section{State-of-the-Art in Federated Traffic Prediction}
+\subsection{Spatial-Temporal Modeling in FL}
+\subsection{Heterogeneity and Personalization}
+\subsection{Privacy and Security Enhancements}
+
+\section{Theoretical Background}
+\subsection{Long Short-Term Memory (LSTM)}
+\subsection{Federated Averaging (FedAvg)}
+
+% =========================
+% CHAPTER 3
+% =========================
+\chapter{METHODOLOGY}
+
+\section{Overview}
+
+\section{Federated Learning Framework}
+
+\section{Collaborative Training Process}
+
+\section{System Architecture and Components}
+\subsection{Traffic Data Environment}
+\subsection{Data Streaming Layer}
+\subsection{Edge Clients}
+\subsection{Federated Learning Server}
+\subsection{Problem Definition}
+\subsection{Multi-Horizon LSTM Architecture}
+
+\section{Network Topology Analysis for Edge Placement}
+\subsection{Louvain Clustering for Community Detection}
+\subsection{Centrality-Based Representative Selection}
+\subsection{Benefits of Topology-Based Placement}
+
+\section{Federated Aggregation Algorithm}
+
+\section{Communication Protocol and Efficiency}
+\subsection{Asynchronous Communication}
+\subsection{Bandwidth Efficiency Gains}
+
+% =========================
+% CHAPTER 4
+% =========================
+\chapter{EXPERIMENT EVALUATION}
+
+\section{Experimental Setup}
+\subsection{Simulation Environment}
+\subsection{Benchmarks Dataset Description}
+\subsection{Hyperparameters}
+\subsection{SUMO Simulation Demo}
+
+\section{Evaluation Metrics}
+
+\section{Experimental Results on Benchmark Dataset}
+\subsection{Convergence Analysis}
+\subsection{Multi-Horizon Prediction Performance}
+\subsection{Client-Level Performance Analysis}
+\subsection{Comparison with Centralized Baseline}
+
+% =========================
+% CHAPTER 5
+% =========================
+\chapter{CONCLUSION AND FUTURE WORK}
+
+\section{Summary}
+
+\section{Future Works}
+\subsection{Multimodal Data Fusion: Cameras and Weather}
+\subsection{Multimodal Fusion Strategies}
+\subsection{Data Engineering and Collection}
+
+% =========================
+% REFERENCES
+% =========================
+\bibliographystyle{plain}
+\bibliography{sn-bibliography}
+
+\end{document}
