@@ -196,20 +196,88 @@ The remainder of this thesis is organized as follows:
 % =========================
 \chapter{REQUIREMENT SURVEY AND ANALYSIS}
 
+This chapter provides a comprehensive review of the existing literature related to traffic flow prediction, the emergence of Federated Learning (FL) in Intelligent Transportation Systems (ITS), and the specific application of FL for privacy-preserving traffic forecasting. Furthermore, it presents the theoretical background of the core technologies used in this thesis, namely Long Short-Term Memory (LSTM) networks and the Federated Averaging (FedAvg) algorithm.
+
 \section{Traffic Flow Prediction}
+Traffic flow prediction is a fundamental component of modern ITS. Accurate forecasting enables traffic management centers to mitigate congestion, optimize signal timing, and provide real-time route guidance to drivers.
+
 \subsection{Traditional Approaches}
+Early approaches to traffic prediction relied heavily on statistical methods. The Autoregressive Integrated Moving Average (ARIMA) model and its variants (e.g., SARIMA, KARIMA) were widely used due to their mathematical soundness. However, these linear models often struggle to capture the complex, non-linear, and dynamic spatiotemporal dependencies inherent in traffic data. Kalman Filters have also been employed for real-time estimation but typically require strict assumptions about the state-space model.
+
 \subsection{Deep Learning Approaches}
+The advent of Deep Learning has revolutionized traffic prediction. Recurrent Neural Networks (RNNs), and specifically Long Short-Term Memory (LSTM) networks and Gated Recurrent Units (GRUs), have become the standard for modeling temporal dependencies in time-series data. These models can effectively learn long-term patterns and handle non-linear relationships.
+
+More recently, Graph Neural Networks (GNNs) have been introduced to explicitly model the spatial topology of road networks. Approaches like Graph Convolutional Networks (GCNs) combined with temporal modules (T-GCN, ST-GCN) have achieved state-of-the-art performance by simultaneously capturing spatial correlations between road segments and temporal trends. However, these centralized deep learning models require aggregating massive amounts of data at a central server, raising significant privacy and bandwidth concerns.
 
 \section{Federated Learning in Intelligent Transportation Systems}
+With the development of intelligent transportation systems, the scale and complexity of traffic data are continuously increasing, and privacy and security concerns are also gaining more attention. In this context, federated learning, as a distributed machine learning paradigm, can effectively address data privacy and security issues in the transportation domain while enhancing the efficiency of traffic prediction and management.
+
+In 2017, the classic federated averaging algorithm was introduced. McMahan proposed a federated learning algorithm based on gradients, discussing how to address data security and privacy issues in a distributed environment, laying an important foundation for the research and application of federated learning. Since 2018, scholars have found that data imbalance and other issues often occur in practical applications. In order to improve the efficiency and scalability of federated learning, Zhao et al. proposed a weighted average based federated learning algorithm. This algorithm adds a weight to the local model updates of each client to balance the impact between different clients, significantly improving accuracy.
+
+In 2020, Wei et al. proposed a federated learning algorithm that combines differential privacy protection, introducing a noise addition mechanism applied to model updating and aggregation. In 2021, Qi et al. proposed a federated learning algorithm based on differential privacy to improve the accuracy of traffic prediction while protecting data privacy. Trustworthy FL is becoming critical for critical infrastructure like ITS, enhancing security and communication efficiency across Internet of Vehicles (IoV) and edge computing environments where data is naturally distributed and sensitive.
 
 \section{State-of-the-Art in Federated Traffic Prediction}
+Recent advancements in Intelligent Transportation Systems (ITS) have heavily adopted federated learning to balance the need for accurate traffic prediction with strict data privacy constraints. Current state-of-the-art research addresses three primary challenges: capturing complex spatial-temporal dependencies across distributed nodes, managing data heterogeneity among clients, and ensuring robust system security. 
+
 \subsection{Spatial-Temporal Modeling in FL}
+A major challenge in federated traffic forecasting is accurately modeling the complex spatial and temporal correlations without centralizing the data. Wang et al. proposed FedSTM, a privacy-preserving spatiotemporal flow prediction model inspired by high-definition image generation techniques. Their approach utilizes a fine-grained Traffic State Pixel Embedding method to quantify and extract atomic-level features from both spatiotemporal and semantic dimensions. This successfully captures highly complex traffic dynamics across distributed networks. However, treating traffic states like high-definition image frames can introduce substantial computational overhead for resource-constrained edge devices. In contrast, our proposed methodology utilizes a highly optimized, lightweight Multi-Horizon LSTM architecture that achieves temporal accuracy with only 5,000 parameters, ensuring it remains feasible for standard IoT edge nodes.
+
 \subsection{Heterogeneity and Personalization}
+In real-world ITS deployments, data collected across different sensors is inherently non-IID (Independent and Identically Distributed), suffering from varying volumes and regional characteristics. Li et al. proposed a communication-efficient federated learning method specifically designed for traffic flow prediction to address these deployment bottlenecks. Their framework successfully reduces communication delays and handles the uneven distribution of data across distributed sensors. While this improves global communication efficiency, a single global model often struggles to perfectly personalize to completely distinct urban topologies (e.g., highway vs. arterial roads). Our system bridges this gap by introducing a graph-based, topology-aware edge placement strategy using Louvain clustering, which naturally groups structurally similar traffic communities to ensure regional relevance and fairness.
+
 \subsection{Privacy and Security Enhancements}
+While federated learning inherently minimizes raw data exposure, the quality of local data and network stability can compromise system robustness and security. Cheng et al. proposed a federated contrastive learning approach aimed at building robust traffic classifiers under low-quality data conditions. Their framework specifically tackles realistic network flaws, such as packet loss and skewed data distributions, successfully maintaining model integrity and learning robust representations without relying on isolated, perfect network simulations. While their work focuses heavily on network traffic classification, our methodology applies similar principles of asynchronous communication and robustness to the domain of multi-horizon traffic speed prediction, utilizing a 300-second per-client timeout and exponential backoff to ensure reliable aggregation even when edge nodes face connectivity issues.
 
 \section{Theoretical Background}
+
 \subsection{Long Short-Term Memory (LSTM)}
+Long Short-Term Memory (LSTM) networks are a special kind of RNN capable of learning long-term dependencies. They were introduced to solve the vanishing gradient problem of traditional RNNs. An LSTM unit is composed of a cell, an input gate, an output gate, and a forget gate. The cell remembers values over arbitrary time intervals and the three gates regulate the flow of information into and out of the cell.
+
+For a given input sequence $x=(x_{1},x_{2},...,x_{T})$, the LSTM computes the hidden state sequence $h=(h_{1},h_{2},...,h_{T})$ by iterating the following equations from $t=1$ to $T$:
+
+\begin{equation}
+f_{t}=\sigma(W_{f}\cdot[h_{t-1},x_{t}]+b_{f})
+\end{equation}
+\begin{equation}
+i_{t}=\sigma(W_{i}\cdot[h_{t-1},x_{t}]+b_{i})
+\end{equation}
+\begin{equation}
+\overline{C}_{t}=\tanh(W_{C}\cdot[h_{t-1},x_{t}]+b_{C})
+\end{equation}
+\begin{equation}
+C_{t}=f_{t}*C_{t-1}+i_{t}*\overline{C}_{t}
+\end{equation}
+\begin{equation}
+o_{t}=\sigma(W_{o}\cdot[h_{t-1},x_{t}]+b_{o})
+\end{equation}
+\begin{equation}
+h_{t}=o_{t}*\tanh(C_{t})
+\end{equation}
+
+where $\sigma$ is the sigmoid function, $*$ denotes the Hadamard product, and $W$ and $b$ are weight matrices and bias vectors, respectively.
+
 \subsection{Federated Averaging (FedAvg)}
+Federated Averaging (FedAvg) is a technique used to train machine learning models where data is spread across many different servers or devices. It ensures data privacy and security and maintains data locality by enabling model training without sharing the raw data.
+
+In the conventional approach of centralized machine learning, data is collected and stored in a central server, and a single model is trained on this consolidated data. Conversely, in federated averaging, data remains decentralized, residing on numerous devices or edge devices, and the model's training is conducted locally on each specific device. The goal is to minimize the global loss function $F(w)$:
+
+\begin{equation}
+\min_{w}F(w)=\sum_{k=1}^{K}\frac{n_{k}}{n}F_{k}(w)
+\end{equation}
+
+where $K$ is the total number of clients, $n_{k}$ is the number of samples on client $k$, $n$ is the total number of samples, and $F_{k}(w)$ is the local loss function of client $k$.
+
+In each round $t$:
+\begin{enumerate}
+    \item The server selects a subset of clients $S_{t}$.
+    \item The server sends the current global model $w_{t}$ to these clients.
+    \item Each client $k$ performs $E$ epochs of local training (SGD) to obtain $w_{t+1}^{k}$.
+    \item The server aggregates the updates:
+\end{enumerate}
+
+\begin{equation}
+w_{t+1}=\sum_{k\in S_{t}}\frac{n_{k}}{n}w_{t+1}^{k}
+\end{equation}
 
 % =========================
 % CHAPTER 3
