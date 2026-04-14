@@ -214,32 +214,78 @@ The remainder of this thesis is organized as follows:
 % =========================
 % CHAPTER 3
 % =========================
-\chapter{METHODOLOGY}
+\chapter{Methodology}
 
 \section{Overview}
+Chapter 3 presents a comprehensive framework for an Edge-based Traffic Prediction system using Federated Learning (FL). The system is specifically designed to address the critical challenges of privacy, bandwidth, and latency in Intelligent Transportation Systems (ITS). By dividing traffic regions into independent and isolated clients, the architecture ensures that raw traffic data never leaves the local environment, thereby guaranteeing robust data privacy. To overcome the challenges of insufficient or poor-quality data at individual nodes, the system leverages FL to collaboratively train a global model. Furthermore, it addresses the issue of model parameter bloat by utilizing a lightweight architecture to reduce communication burdens, while incorporating mechanisms to handle data imbalance among clients.
 
-\section{Federated Learning Framework}
+\section{Federated Training Process}
+The framework operates on a distributed architecture consisting of two primary roles: Local Clients and a Central Server.
+\begin{itemize}
+    \item \textbf{Local Clients:} Function as independent computing units that manage local data, train the model using parameters dispatched by the server, and upload the updated model weights.
+    \item \textbf{Central Server:} Acts as the coordinator that operates completely independent of the clients' raw data. It is responsible for initializing the global model, distributing parameters, aggregating client updates, and generating the new global model for the next iteration.
+\end{itemize}
 
 \section{Collaborative Training Process}
+The collaborative training process follows a strict sequence in each communication round:
+\begin{itemize}
+    \item \textbf{Initialization \& Distribution:} The server initializes the global model weights $W_0$ and distributes the current weights $W_r$ to selected clients.
+    \item \textbf{Local Training:} Each client $k$ uses its private local dataset $D_k$ to train the model and minimize prediction error.
+    \item \textbf{Upload \& Aggregation:} Clients upload their updated weights $W_r^k$ to the server, which aggregates them using the Federated Averaging (FedAvg) algorithm to form the new global model $W_{r+1}$.
+    \item \textbf{Iteration:} This process repeats for a fixed number of rounds $R$ or until convergence is achieved.
+\end{itemize}
 
 \section{System Architecture and Components}
+The system is built upon five integrated subsystems designed to support both simulated and real-world data environments.
+
 \subsection{Traffic Data Environment}
+The environment operates in two distinct modes:
+\begin{itemize}
+    \item \textbf{Simulation Mode:} Utilizes the SUMO (Simulation of Urban MObility) platform to generate realistic, multi-modal traffic flows on road networks imported from OpenStreetMap.
+    \item \textbf{Real-World Mode:} Integrates benchmark datasets (PEMS-BAY and METR-LA) with 5-minute temporal resolutions for rigorous validation.
+\end{itemize}
+
 \subsection{Data Streaming Layer}
+Real-time data flows via a WebSocket-based publish-subscribe architecture. A Python server publishes high-frequency traffic metrics (speed, vehicle count, occupancy) to edge clients in structured JSON messages. Each client maintains a fixed-size circular buffer storing 300 seconds of aggregated data to ensure continuous, memory-efficient training.
+
 \subsection{Edge Clients}
+Edge Clients maintain persistent WebSocket connections, buffer data, and perform local training using PyTorch with the Adam optimizer (learning rate 0.001, batch size 32). They utilize the Flower framework interface to communicate seamlessly with the server.
+
 \subsection{Federated Learning Server}
-\subsection{Problem Definition}
+Also utilizing the Flower framework, the server coordinates training with configurations such as a minimum of 5 clients per round and a 300-second timeout window. It evaluates the aggregated model against held-out test data after each round to track convergence.
+
 \subsection{Multi-Horizon LSTM Architecture}
+To predict future traffic sequences based on historical observations, the system employs a highly optimized Long Short-Term Memory (LSTM) network.
+\begin{itemize}
+    \item \textbf{Structure:} The encoder consists of two stacked LSTM layers with 64 units each.
+    \item \textbf{Multi-Head Output:} Instead of a single output, the model features three distinct fully connected heads to simultaneously predict short-term (15 minutes), medium-term (30 minutes), and long-term (60 minutes) traffic conditions.
+    \item \textbf{Efficiency:} The model is exceptionally lightweight, containing only 5,000 parameters and a weight file size of 20 KB. This ensures it fits comfortably on edge devices and requires only 12-15 seconds of training time per round on a standard CPU.
+\end{itemize}
 
 \section{Network Topology Analysis for Edge Placement}
+A crucial innovation in this methodology is the automated, topology-based placement of edge clients within the road network, avoiding arbitrary manual configurations.
+
 \subsection{Louvain Clustering for Community Detection}
+The system constructs an undirected graph of the road network and applies Louvain clustering to partition the network into 4-10 natural traffic communities by optimizing modularity.
+
 \subsection{Centrality-Based Representative Selection}
+Within each community, the optimal edge location is determined by calculating a combined score of Betweenness Centrality (measuring how often a segment is on the shortest path) and Closeness Centrality (measuring the average distance to other segments).
+
 \subsection{Benefits of Topology-Based Placement}
+This spatial partitioning strategy ensures balanced regional fairness, accurately mimics the coverage of physical Roadside Units (RSUs), and successfully introduces the statistical heterogeneity necessary to test the FL algorithm.
 
 \section{Federated Aggregation Algorithm}
+The server aggregates local models using a weighted FedAvg algorithm, mathematically defined as
+$$W_{r+1} = \sum_{k \in S_r} \frac{n_k}{n} W_r^k$$
+where weights are proportional to the size of the clients' local data to ensure fair influence.
 
 \section{Communication Protocol and Efficiency}
+
 \subsection{Asynchronous Communication}
+To handle the realities of network communication, the system uses an asynchronous protocol. It employs a 300-second per-client timeout and exponential backoff for upload failures, ensuring that the aggregation proceeds as long as a minimum threshold of clients successfully upload.
+
 \subsection{Bandwidth Efficiency Gains}
+By compressing the model to just 22 KB per client, the architecture achieves an 80-100x reduction in bandwidth costs compared to centralized raw data transmission
 
 % =========================
 % CHAPTER 4
@@ -743,6 +789,6 @@ Future work should incorporate multimodal data sources, including camera-based v
 % REFERENCES
 % =========================
 \bibliographystyle{plain}
-\bibliography{sn-bibliography}
+\bibliography{reference}
 
 \end{document}
