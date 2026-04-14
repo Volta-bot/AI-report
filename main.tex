@@ -125,7 +125,7 @@ With the expansion of urban regions, there is an inevitable increase in vehicula
 
 Traditionally, these prediction models rely on a centralized architecture where high-frequency data from thousands of distributed sensors is continuously transmitted to a central server. However, this approach faces two major challenges: high communication bandwidth consumption and increased latency. More importantly, it introduces severe privacy risks by exposing sensitive user mobility patterns, potentially violating data protection regulations such as the General Data Protection Regulation (GDPR).
 
-To address these limitations, Federated Learning (FL) has emerged as a promising paradigm that enables distributed edge devices to collaboratively train a shared global model by exchanging only model parameters, ensuring that raw data remains local.
+To address these limitations, Federated Learning (FL) has emerged as a promising paradigm for distributed edge devices to collaboratively train a shared global model by exchanging only model parameters, keeping raw data local.
 
 
 \section{Background and Problems}
@@ -621,15 +621,59 @@ predicted value, and $n$ is the total number of samples.
 % =========================
 % CHAPTER 5
 % =========================
-\chapter{CONCLUSION AND FUTURE WORK}
+\chapter{Conclusion}
 
-\section{Summary}
+% Thêm một đoạn dẫn nhập ngắn gọn cho toàn bộ chương
+This chapter concludes the thesis by summarizing the core contributions and findings, acknowledging the inherent limitations of the proposed framework, and outlining potential directions for future research.
 
-\section{Future Works}
-\subsection{Multimodal Data Fusion: Cameras and Weather}
-\subsection{Multimodal Fusion Strategies}
-\subsection{Data Engineering and Collection}
+\section{Summary of Findings}
 
+This thesis successfully developed and validated a privacy-preserving Edge-based Traffic Prediction framework utilizing Federated Learning (FL).
+
+\subsection{Multi-Horizon Traffic Prediction Model}
+By distributing a custom Multi-Horizon Long Short-Term Memory (LSTM) model across edge clients, the system effectively captures complex spatial-temporal traffic dependencies to generate simultaneous short-term (15 min), medium-term (30 min), and long-term (60 min) forecasts.
+
+\subsection{Adaptive Edge Deployment and Data Partitioning}
+The implementation of Louvain clustering for automated edge placement and a graph-based spatial partitioning strategy enabled the framework to automatically adapt to network topologies and naturally handle the statistical heterogeneity across diverse traffic regions.
+
+\subsection{Experimental Validation and Performance}
+Rigorous experimental evaluations—conducted through both realistic SUMO simulation environments and empirical benchmark datasets (PeMS-BAY and METR-LA)—demonstrated that the federated approach maintains highly competitive predictive performance.
+
+Specifically, the federated model achieved 92\% to 96\% of the accuracy of an ideal centralized baseline; for instance, it recorded a 7.80\% MAPE for 60-minute predictions on the PeMS-BAY dataset compared to the 7.20\% centralized benchmark.
+
+\subsection{System-Level Advantages}
+This marginal 4--8\% accuracy trade-off is heavily outweighed by transformative architectural benefits, including:
+\begin{itemize}
+    \item Absolute data localization.
+    \item Robust protection against membership inference attacks.
+    \item Enhanced operational fault tolerance.
+    \item A massive $262\times$ reduction in communication bandwidth compared to streaming raw sensor data.
+\end{itemize}
+
+\section{Limitations}
+
+\subsection{Challenges with Non-IID Data}
+The standard Federated Averaging (FedAvg) algorithm employed in this study may experience slower convergence rates and reduced stability when subjected to extreme non-IID (Independent and Identically Distributed) data distributions, such as highly variable traffic patterns in complex urban networks.
+
+\subsection{Accuracy Gap Compared to Centralized Training}
+The system exhibits an inherent accuracy gap (approximately 4--8\% relative to centralized training), primarily driven by communication constraints. The accumulated error from discretized aggregation across fixed rounds, combined with limited convergence during short local training epochs on resource-constrained edge devices, contributes to this performance loss.
+
+\subsection{Communication Overhead}
+Although raw data remains localized, the continuous transmission of model weights during iterative training imposes significant communication overhead, which remains a challenge for bandwidth-constrained IoT and edge environments.
+
+\section{Future Work}
+
+\subsection{Advanced Federated Optimization Algorithms}
+Transitioning from FedAvg to more advanced optimization algorithms such as FedProx or SCAFFOLD can better mitigate statistical heterogeneity (non-IID data) and improve resilience against system stragglers.
+
+\subsection{Model Architecture Enhancements}
+Upgrading from LSTM to more advanced architectures such as Spatio-Temporal Graph Neural Networks (ST-GNNs) or Transformer-based models will enhance the ability to capture complex spatial dependencies in traffic networks.
+
+\subsection{Privacy and Edge Efficiency Improvements}
+Integrating Differential Privacy (DP) mechanisms or Secure Multi-Party Computation (SMPC) will provide formal privacy guarantees against model inversion attacks. Additionally, applying model compression techniques such as quantization and pruning will reduce computational costs and communication overhead, making deployment feasible on resource-limited devices (e.g., Raspberry Pi, Jetson Nano).
+
+\subsection{Multimodal Data Fusion}
+Future work should incorporate multimodal data sources, including camera-based visual features (such as optical flow, queue lengths, and incident detection) and real-time weather data. Exploring early fusion, late fusion, and cross-attention mechanisms across these modalities can significantly improve prediction robustness, particularly during non-recurring congestion events.
 % =========================
 % REFERENCES
 % =========================
