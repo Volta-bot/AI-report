@@ -25,21 +25,43 @@
 
 % Section indentation matching reference template
 \usepackage{titlesec}
-\titleformat{\section}[hang]{\bfseries}{\thesection}{1em}{}
+
+\titleformat{\chapter}[display]
+    {\bfseries\Large}
+    {CHAPTER \thechapter.\ }
+    {0pt}{}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+% --- Định dạng Section ---
+% In đậm, đánh số dạng "1.1    "
+\titleformat{\section}[hang]
+    {\bfseries}
+    {\thechapter.\arabic{section}\ \ \ \ }
+    {0pt}{}
 \titlespacing{\section}{0pt}{\parskip}{0.5\parskip}
 
-\titleformat{\subsection}[hang]{\bfseries}{\thesubsection}{1em}{}
+% --- Định dạng Subsection ---
+% In đậm, lùi lề 30pt, đánh số dạng "1.1.1    "
+\titleformat{\subsection}[hang]
+    {\bfseries}
+    {\thechapter.\arabic{section}.\arabic{subsection}\ \ \ \ }
+    {0pt}{}
 \titlespacing{\subsection}{30pt}{\parskip}{0.5\parskip}
 
-\titleformat{\subsubsection}[hang]{\bfseries}{\thesubsubsection}{1em}{}
+% --- Định dạng Subsubsection ---
+% In đậm, lùi lề 50pt, đổi đánh số thành chữ cái thường "a, " "b, "
+\renewcommand\thesubsubsection{\alph{subsubsection}}
+\titleformat{\subsubsection}[hang]
+    {\bfseries}
+    {\alph{subsubsection}, \ }
+    {0pt}{}
 \titlespacing{\subsubsection}{50pt}{\parskip}{0.5\parskip}
 
-\usepackage{setspace}     % giãn dòng
-\usepackage{parskip}      % bỏ thụt đầu dòng, thêm khoảng cách giữa đoạn
-\usepackage{ragged2e}     % căn đều đẹp hơn
-
-\setstretch{1.3}          % chỉnh giãn dòng (1.3–1.5 là đẹp)
-\setlength{\parindent}{0pt}  % bỏ thụt đầu dòng
+\usepackage{setspace}       % giãn dòng
+\usepackage{parskip}        % bỏ thụt đầu dòng, thêm khoảng cách giữa đoạn
+\usepackage{ragged2e}       % căn đều đẹp hơn
+\usepackage{hyperref}       % Để sửa lỗi không nhận lệnh \phantomsection
+\usepackage{appendix}       % Để dùng các lệnh phụ lục
 % =========================
 % BEGIN DOCUMENT
 % =========================
@@ -59,19 +81,19 @@
 {\Large Edge-based Traffic Prediction via Federated Learning}\\[2cm]
 
 {\large \textbf{HOANG ANH}}\\
-{\large enter email here}\\[0.3cm]
+{\large Anh.NH2417093@sis.hust.edu.vn}\\[0.3cm]
 
 {\large \textbf{DANG XUAN BACH}}\\
-{\large enter email here}\\[0.3cm]
+{\large Bach.DX2417099@sis.hust.edu.vn}\\[0.3cm]
 
 {\large \textbf{TRAN DUC NAM}}\\
-{\large enter email here}\\[0.3cm]
+{\large Nam.TD2417175@sis.hust.edu.vn}\\[0.3cm]
 
 {\large \textbf{LUU QUOC KHANH}}\\
-{\large enter email here}\\[0.3cm]
+{\large Khanh.LQ2417140@sis.hust.edu.vn}\\[0.3cm]
 
 {\large \textbf{DOAN NGUYEN NGOC SON}}\\
-{\large enter email here}\\[0.5cm]
+{\large Son.DNN2417191@sis.hust.edu.vn}\\[0.5cm]
 
 {\large Program: Global ICT}\\[2cm]
 
@@ -82,7 +104,7 @@
 \vspace{1cm}
 
 \begin{flushleft}
-\textbf{Department:} Computer Engineering
+\textbf{Department:} Computer Science
 \end{flushleft}
 
 \begin{flushleft}
@@ -282,7 +304,7 @@ w_{t+1}=\sum_{k\in S_{t}}\frac{n_{k}}{n}w_{t+1}^{k}
 % =========================
 % CHAPTER 3
 % =========================
-\chapter{Methodology}
+\chapter{METHODOLOGY}
 
 \section{Overview}
 Chapter 3 presents a comprehensive framework for an Edge-based Traffic Prediction system using Federated Learning (FL). The system is specifically designed to address the critical challenges of privacy, bandwidth, and latency in Intelligent Transportation Systems (ITS). By dividing traffic regions into independent and isolated clients, the architecture ensures that raw traffic data never leaves the local environment, thereby guaranteeing robust data privacy. To overcome the challenges of insufficient or poor-quality data at individual nodes, the system leverages FL to collaboratively train a global model. Furthermore, it addresses the issue of model parameter bloat by utilizing a lightweight architecture to reduce communication burdens, while incorporating mechanisms to handle data imbalance among clients.
@@ -800,7 +822,7 @@ To validate the effectiveness of the proposed framework, the Federated Learning 
 % =========================
 % CHAPTER 5
 % =========================
-\chapter{Conclusion}
+\chapter{CONCLUSION}
 
 % Thêm một đoạn dẫn nhập ngắn gọn cho toàn bộ chương
 This chapter concludes the thesis by summarizing the core contributions and findings, acknowledging the inherent limitations of the proposed framework, and outlining potential directions for future research.
@@ -856,7 +878,21 @@ Future work should incorporate multimodal data sources, including camera-based v
 % =========================
 % REFERENCES
 % =========================
-\bibliographystyle{plain}
+% ===================================================
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{REFERENCE}
+
+\nocite{*} 
+\bibliographystyle{ieeetr}
+
+% Thêm dòng này để đổi tên tiêu đề
+\renewcommand{\bibname}{REFERENCE} 
 \bibliography{reference}
+
+\appendices
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+\renewcommand{\chaptername}{CHAPTER}
 
 \end{document}
